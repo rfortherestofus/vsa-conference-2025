@@ -1,3 +1,34 @@
 ---
-title: "Report"
+title: "VSA 2025 R Session"
+author: "Brian Slattery & David Keyes"
+format: 
+  dashboard:
+    scrolling: true
+execute: 
+  warning: false
+  echo: false
+  message: false
+  output: true
 ---
+
+```{r packages}
+# These are all of the packages (collections of R functions) that are used to create this report
+# These are separately installed with install.packages() & need to be enabled here using the library() function
+
+# The tidyverse package (actually, a collection of packages) is a broad set of functions for organizing, analyzing, and visualizing data
+# Tidyverse packages assume that your data is in a particular format-- but this allows them to work seamlessly together
+# This will often provide the vast majority of additional capability that you'll need for any project
+library(tidyverse)
+
+# This allows you to smoothly authenticate with Google and download data from Google Sheets
+library(googlesheets4)
+
+
+```
+
+```{r import}
+# The first step is to import the survey responses from Google Sheets
+# Here's the link to add new responses to the survey: https://forms.gle/1BRREmqWbVB6x8nm9
+responses <- read_sheet("https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/")
+```
+
