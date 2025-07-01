@@ -23,6 +23,9 @@ library(tidyverse)
 # This allows you to smoothly authenticate with Google and download data from Google Sheets
 library(googlesheets4)
 
+# This provides a clean_names function that makes variables easier to work with from imported data
+library(janitor)
+
 
 ```
 
@@ -35,4 +38,7 @@ gs4_auth("banjaloupe@gmail.com")
 
 # This gets the responses from the Google Sheet, and saves it with the name "responses"
 responses <- read_sheet("https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/")
+
+# This cleans up the variable names that came in from Sheets, to make them easier to work with later
+responses <- clean_names(responses)
 ```
