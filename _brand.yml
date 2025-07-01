@@ -1,0 +1,9 @@
+typography:
+  base: 
+    family: Gotham Narrow
+    weight: 300
+  headings: Gotham Narrow
+
+color:
+  primary: "#007765"
+  secondary: "#6AA341"
