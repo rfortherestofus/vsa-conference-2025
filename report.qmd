@@ -29,6 +29,10 @@ library(googlesheets4)
 ```{r import}
 # The first step is to import the survey responses from Google Sheets
 # Here's the link to add new responses to the survey: https://forms.gle/1BRREmqWbVB6x8nm9
+
+# Authenticating with Google is necessary before downloading data from Sheets
+gs4_auth("banjaloupe@gmail.com")
+
+# This gets the responses from the Google Sheet, and saves it with the name "responses"
 responses <- read_sheet("https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/")
 ```
-
