@@ -42,3 +42,45 @@ responses <- read_sheet("https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6o
 # This cleans up the variable names that came in from Sheets, to make them easier to work with later
 responses <- clean_names(responses)
 ```
+
+```{r experience}
+# First let's look at the question about previous experience with R
+
+# I want to know how many people responded with each of the possible options
+# So I group_by() the name of the column that I want to look at, and then count()
+responses |> 
+  group_by(how_much_experience_do_you_have_with_r) |> 
+  count()
+
+# Another way to do this is to use summarize() instead of count()
+# Summarizing allows me to do other things besides counting, like getting the max, average, etc
+# The n() function here, used inside sum(), gets me the number of responses
+# And I can choose what the resulting column is called (in this case, "total")-- count() names it "n" by default
+responses |> 
+  group_by(how_much_experience_do_you_have_with_r) |> 
+  summarize(total = sum(n()))
+
+# However, the options for the experience question are listed in alphabetical order, what if I want to see them a different way?
+# I can view them in descending order of number of responses, using arrange() and desc()
+responses |> 
+  group_by(how_much_experience_do_you_have_with_r) |> 
+  count() |> 
+  arrange(desc(n))
+
+# But my options are themselves meant to be in an order (none, slight, moderate, a lot)
+# So I can format this variable into a "factor", which is a type of column that has ordering information (called "levels") saved in it
+# To do this, I need to change my experience column with mutate()
+# (I also first rename the column to a shorter name so it's easier to read)
+responses |> 
+  rename(experience = how_much_experience_do_you_have_with_r) |> 
+  group_by(experience) |> 
+  count() |> 
+  mutate(experience = fct(experience,
+                          levels = c("None at all",
+                                     "Slight experience",
+                                     "Moderate experience",
+                                     "A lot of experience"))) |> 
+  arrange(experience)
+
+```
+
