@@ -10,6 +10,7 @@ format:
     incremental: true
     auto-animate: true
     slide-level: 3
+    output-location: fragment
 execute: 
   message: false
   warning: false
@@ -19,19 +20,130 @@ title-slide-attributes:
   data-background-size: cover
 ---
 
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(gt)
+library(tidycensus)
+```
+
 # Survey {.inverse}
 
-- Include link
+---
 
-# R {.inverse}
+[![](assets/survey.png)](https://docs.google.com/forms/d/e/1FAIpQLSe4H0Tr6K2y5XP-OK12bynh9F88VZhJdYLQvtcwKA2dGhHxIw/viewform?usp=preview)
 
-David
 
-## Not just for stats
+# What is R? {.inverse}
 
-## Non-quarto workflow
+## It's Not Just a Tool for Complicated Statistics {.inverse}
 
-## Quarto workflow
+---
+
+**What I tell people who just want the basics:**
+
+- R is a high-powered Excel
+
+. . .
+
+**What I really want to say:**
+
+- R is a tool that can completely revolutionize how you work with data
+
+## Data Analysis in a Snap {.inverse}
+
+---
+
+![](assets/penguins-data.png)
+
+---
+
+```{r}
+#| eval: false
+#| echo: true
+penguins <- read_csv("penguins.csv")
+```
+
+. . .
+
+```{r}
+penguins |>
+  select(species:bill_length_mm)
+```
+
+---
+
+
+```{r}
+#| echo: true
+penguins |>
+  summarize(
+    avg_bill_length = mean(
+      bill_length_mm,
+      na.rm = TRUE
+    )
+  )
+```
+
+---
+
+```{r}
+#| echo: true
+#| code-line-numbers: "2"
+penguins |>
+  group_by(species, island) |>
+  summarize(
+    avg_bill_length = mean(
+      bill_length_mm,
+      na.rm = TRUE
+    )
+  )
+```
+
+
+## High-Quality Data Visualization {.inverse}
+
+---
+
+:::{.center-slide}
+[![](assets/qz-ggplot-article.png)](https://qz.com/1007328/all-hail-ggplot2-the-code-powering-all-those-excellent-charts-is-10-years-old)
+:::
+
+---
+
+:::{.center-slide}
+[![](assets/bbc-plots.png)](https://book.rfortherestofus.com/themes.html)
+:::
+
+---
+
+:::{.center-slide}
+[![](assets/psc.png)](https://rfortherestofus.com/success-stories/pschousing)
+:::
+
+
+# Packages {.inverse}
+
+---
+
+![](assets/tidyverse-website.png)
+
+---
+
+![](assets/gendercoder.png)
+
+## R's Killer Feature: Quarto {.inverse}
+
+---
+
+![](assets/non-r-workflow.png)
+
+---
+
+![](assets/render-quarto.png)
+
+
+
 
 # Brian Example {.inverse}
 

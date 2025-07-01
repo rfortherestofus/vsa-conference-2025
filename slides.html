@@ -27,6 +27,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="slides_files/libs/revealjs/dist/theme/quarto-2c17daafdf696a8af2404f6b552ef9ac.css">
   <link href="slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -132,32 +198,170 @@
 </div>
 
 </section>
+<section>
 <section id="survey" class="title-slide slide level1 inverse center">
 <h1>Survey</h1>
-<ul>
-<li class="fragment">Include link</li>
-</ul>
-</section>
 
+</section>
+<section class="slide level3 center">
+
+<p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe4H0Tr6K2y5XP-OK12bynh9F88VZhJdYLQvtcwKA2dGhHxIw/viewform?usp=preview"><img data-src="assets/survey.png"></a></p>
+</section></section>
 <section>
-<section id="r" class="title-slide slide level1 inverse center">
-<h1>R</h1>
-<p>David</p>
-</section>
-<section id="not-just-for-stats" class="title-slide slide level2 center">
-<h2>Not just for stats</h2>
+<section id="what-is-r" class="title-slide slide level1 inverse center">
+<h1>What is R?</h1>
 
 </section>
-
-<section id="non-quarto-workflow" class="title-slide slide level2 center">
-<h2>Non-quarto workflow</h2>
-
-</section>
-
-<section id="quarto-workflow" class="title-slide slide level2 center">
-<h2>Quarto workflow</h2>
+<section id="its-not-just-a-tool-for-complicated-statistics" class="title-slide slide level2 inverse center">
+<h2>It’s Not Just a Tool for Complicated Statistics</h2>
 
 </section>
+<section class="slide level3 center">
+
+<p><strong>What I tell people who just want the basics:</strong></p>
+<ul>
+<li class="fragment">R is a high-powered Excel</li>
+</ul>
+<div class="fragment">
+<p><strong>What I really want to say:</strong></p>
+<ul>
+<li class="fragment">R is a tool that can completely revolutionize how you work with data</li>
+</ul>
+</div>
+</section>
+
+<section id="data-analysis-in-a-snap" class="title-slide slide level2 inverse center">
+<h2>Data Analysis in a Snap</h2>
+
+</section>
+<section class="slide level3 center">
+
+
+<img data-src="assets/penguins-data.png" class="r-stretch"></section>
+<section class="slide level3 center">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>penguins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"penguins.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment">
+
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 344 × 3
+   species island    bill_length_mm
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;
+ 1 Adelie  Torgersen           39.1
+ 2 Adelie  Torgersen           39.5
+ 3 Adelie  Torgersen           40.3
+ 4 Adelie  Torgersen           NA  
+ 5 Adelie  Torgersen           36.7
+ 6 Adelie  Torgersen           39.3
+ 7 Adelie  Torgersen           38.9
+ 8 Adelie  Torgersen           39.2
+ 9 Adelie  Torgersen           34.1
+10 Adelie  Torgersen           42  
+# ℹ 334 more rows</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level3 center">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href=""></a>  <span class="fu">summarize</span>(</span>
+<span id="cb3-3"><a href=""></a>    <span class="at">avg_bill_length =</span> <span class="fu">mean</span>(</span>
+<span id="cb3-4"><a href=""></a>      bill_length_mm,</span>
+<span id="cb3-5"><a href=""></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-6"><a href=""></a>    )</span>
+<span id="cb3-7"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  avg_bill_length
+            &lt;dbl&gt;
+1            43.9</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level3 center">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href=""></a>  <span class="fu">group_by</span>(species, island) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href=""></a>  <span class="fu">summarize</span>(</span>
+<span id="cb5-4"><a href=""></a>    <span class="at">avg_bill_length =</span> <span class="fu">mean</span>(</span>
+<span id="cb5-5"><a href=""></a>      bill_length_mm,</span>
+<span id="cb5-6"><a href=""></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-7"><a href=""></a>    )</span>
+<span id="cb5-8"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+# Groups:   species [3]
+  species   island    avg_bill_length
+  &lt;fct&gt;     &lt;fct&gt;               &lt;dbl&gt;
+1 Adelie    Biscoe               39.0
+2 Adelie    Dream                38.5
+3 Adelie    Torgersen            39.0
+4 Chinstrap Dream                48.8
+5 Gentoo    Biscoe               47.5</code></pre>
+</div>
+</div>
+</section>
+
+<section id="high-quality-data-visualization" class="title-slide slide level2 inverse center">
+<h2>High-Quality Data Visualization</h2>
+
+</section>
+<section class="slide level3 center">
+
+<div class="center-slide">
+<p><a href="https://qz.com/1007328/all-hail-ggplot2-the-code-powering-all-those-excellent-charts-is-10-years-old"><img data-src="assets/qz-ggplot-article.png"></a></p>
+</div>
+</section>
+<section class="slide level3 center">
+
+<div class="center-slide">
+<p><a href="https://book.rfortherestofus.com/themes.html"><img data-src="assets/bbc-plots.png"></a></p>
+</div>
+</section>
+<section class="slide level3 center">
+
+<div class="center-slide">
+<p><a href="https://rfortherestofus.com/success-stories/pschousing"><img data-src="assets/psc.png"></a></p>
+</div>
+</section>
+</section>
+<section>
+<section id="packages" class="title-slide slide level1 inverse center">
+<h1>Packages</h1>
+
+</section>
+<section class="slide level3 center">
+
+
+<img data-src="assets/tidyverse-website.png" class="r-stretch"></section>
+<section class="slide level3 center">
+
+
+<img data-src="assets/gendercoder.png" class="r-stretch"></section>
+<section id="rs-killer-feature-quarto" class="title-slide slide level2 inverse center">
+<h2>R’s Killer Feature: Quarto</h2>
+
+</section>
+<section class="slide level3 center">
+
+
+<img data-src="assets/non-r-workflow.png" class="r-stretch"></section>
+<section class="slide level3 center">
+
+
+<img data-src="assets/render-quarto.png" class="r-stretch"></section>
 </section>
 <section>
 <section id="brian-example" class="title-slide slide level1 inverse center">
@@ -420,6 +624,44 @@
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
