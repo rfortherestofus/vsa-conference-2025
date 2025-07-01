@@ -57,3 +57,5 @@ Brian
 # Q+A {.inverse}
 
 Both
+
+# Resources {.inverse}
