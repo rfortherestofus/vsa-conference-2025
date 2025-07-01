@@ -1,0 +1,59 @@
+---
+title: VSA Conference 2025
+format:
+  rfortherestofus-slides-revealjs:
+    menu: false
+    progress: false
+    slide-number: true
+    show-slide-number: print
+    center: true
+    incremental: true
+    auto-animate: true
+    slide-level: 3
+execute: 
+  message: false
+  warning: false
+  cache: false
+title-slide-attributes:
+  data-background-image: assets/rru-hex-bg-gradient-dark.svg
+  data-background-size: cover
+---
+
+# Survey {.inverse}
+
+- Include link
+
+# R {.inverse}
+
+David
+
+## Not just for stats
+
+## Non-quarto workflow
+
+## Quarto workflow
+
+# Brian Example {.inverse}
+
+---
+
+![](screenshot.png)
+
+## Show dashboard?
+
+## Image to show process of creating dashboard
+
+- From Alchemer
+- Windows task scheduler
+
+# Demo {.inverse}
+
+Brian
+
+## Pull in data
+
+## Create dashboard
+
+# Q+A {.inverse}
+
+Both
