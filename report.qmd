@@ -29,6 +29,9 @@ library(janitor)
 # This has specialized functions for creating & manipulating tables for dataviz/reports
 library(gt)
 
+# This helps to deal with date & time data
+library(lubridate)
+
 
 ```
 
@@ -157,7 +160,56 @@ responses |>
 
 ### Column {width=50%}
 
-```{r}
-1
+```{r dates}
+#| output: false
+# It's common to have to clean up date & time data when it's messy or nonstandard
+# For example, Excel or Google Sheets can have a hard time taking a date in text format, and turning it into a usable "date" format
+# R is very good at cleaning up messy date data-- here's the birthday data from the survey that is intentionally messed up a bit
+responses |> 
+  select(bad_birthday)
+
+# The parse_date_time() function in the lubridate package can quickly transform text dates into a useable format
+# Like above we add a new column by mutating an existing column, using bad_birthday to create good_birthday with parse_date_time() 
+responses |> 
+  select(bad_birthday) |> 
+  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy"))
+
+# This allows us to do things like easily get the month from the date using month()
+# Which can be used to highlight which months of the year have the most birthdays from our session attendees
+# (This uses same grouping/counting steps as above)
+responses |> 
+  select(bad_birthday) |> 
+  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |> 
+  mutate(month = month(good_birthday, label = TRUE)) |> 
+  group_by(month) |> 
+  count() |> 
+  arrange(desc(n))
+```
+
+```{r dates-chart}
+#| title: Birthday Months
+#| fig-height: 3
+# Let's show these more frequent birthday months in a visual
+# Continuing from the previous section, with some new steps to add in any months that might be missing (using a joining function)
+# The bits after ggplot() are what create this particular visualization & style it visually
+# (ggplot is very powerful but also very complex, and we aren't covering it in detail here-- but you can learn more from our linked resources!)
+responses |> 
+  select(bad_birthday) |> 
+  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |> 
+  mutate(month = month(good_birthday, label = TRUE)) |> 
+  group_by(month) |> 
+  count() |> 
+  ungroup() |> 
+  right_join(as_tibble(month.abb) |> rename(month = value)) |> 
+  mutate(month = fct(month, levels = month.abb)) |> 
+  mutate(n = case_when(is.na(n) ~ 0, .default = n)) |> 
+  ggplot() +
+  geom_tile(aes(x = month, y = 1, fill = n)) +
+  theme_minimal() +
+  theme(legend.position = "top",
+        axis.title = element_blank(),
+        axis.text.y = element_blank()) +
+  scale_fill_gradient(low = "white",
+                      high = "#007765")
 ```
 
