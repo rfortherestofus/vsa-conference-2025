@@ -37,10 +37,12 @@ library(gt)
 # Here's the link to add new responses to the survey: https://forms.gle/1BRREmqWbVB6x8nm9
 
 # Authenticating with Google is necessary before downloading data from Sheets
-gs4_auth("banjaloupe@gmail.com")
+gs4_auth(Sys.getenv("GOOGLE_SHEETS_EMAIL"))
 
 # This gets the responses from the Google Sheet, and saves it with the name "responses"
-responses <- read_sheet("https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/")
+responses <- read_sheet(
+  "https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/"
+)
 
 # This cleans up the variable names that came in from Sheets, to make them easier to work with later
 responses <- clean_names(responses)
@@ -57,55 +59,67 @@ responses <- clean_names(responses)
 
 # I want to know how many people responded with each of the possible options
 # So I group_by() the name of the column that I want to look at, and then count()
-responses |> 
-  group_by(how_much_experience_do_you_have_with_r) |> 
+responses |>
+  group_by(how_much_experience_do_you_have_with_r) |>
   count()
 
 # Another way to do this is to use summarize() instead of count()
 # Summarizing allows me to do other things besides counting, like getting the max, average, etc
 # The n() function here, used inside sum(), gets me the number of responses
 # And I can choose what the resulting column is called (in this case, "total")-- count() names it "n" by default
-responses |> 
-  group_by(how_much_experience_do_you_have_with_r) |> 
+responses |>
+  group_by(how_much_experience_do_you_have_with_r) |>
   summarize(total = sum(n()))
 
 # However, the options for the experience question are listed in alphabetical order, what if I want to see them a different way?
 # I can view them in descending order of number of responses, using arrange() and desc()
 # (The ungroup() function is necessary if you do other steps after counting or summarizing)
-responses |> 
-  group_by(how_much_experience_do_you_have_with_r) |> 
-  count() |> 
-  ungroup() |> 
+responses |>
+  group_by(how_much_experience_do_you_have_with_r) |>
+  count() |>
+  ungroup() |>
   arrange(desc(n))
 
 # But my options are themselves meant to be in an order (none, slight, moderate, a lot)
 # So I can format this variable into a "factor", which is a type of column that has ordering information (called "levels") saved in it
 # To do this, I need to change my experience column with mutate()
 # (I also first rename the column to a shorter name so it's easier to read)
-responses |> 
-  rename(experience = how_much_experience_do_you_have_with_r) |> 
-  group_by(experience) |> 
-  count() |> 
-  ungroup() |> 
-  mutate(experience = fct(experience,
-                          levels = c("None at all",
-                                     "Slight experience",
-                                     "Moderate experience",
-                                     "A lot of experience"))) |> 
+responses |>
+  rename(experience = how_much_experience_do_you_have_with_r) |>
+  group_by(experience) |>
+  count() |>
+  ungroup() |>
+  mutate(
+    experience = fct(
+      experience,
+      levels = c(
+        "None at all",
+        "Slight experience",
+        "Moderate experience",
+        "A lot of experience"
+      )
+    )
+  ) |>
   arrange(experience)
 
 # You can also add a new column using mutate, that shows the percent of responses in each category
-responses |> 
-  rename(experience = how_much_experience_do_you_have_with_r) |> 
-  group_by(experience) |> 
-  count() |> 
-  ungroup() |> 
-  mutate(percent = n / n()) |> 
-  mutate(experience = fct(experience,
-                          levels = c("None at all",
-                                     "Slight experience",
-                                     "Moderate experience",
-                                     "A lot of experience"))) |> 
+responses |>
+  rename(experience = how_much_experience_do_you_have_with_r) |>
+  group_by(experience) |>
+  count() |>
+  ungroup() |>
+  mutate(percent = n / n()) |>
+  mutate(
+    experience = fct(
+      experience,
+      levels = c(
+        "None at all",
+        "Slight experience",
+        "Moderate experience",
+        "A lot of experience"
+      )
+    )
+  ) |>
   arrange(experience)
 
 ```
@@ -116,23 +130,27 @@ responses |>
 # Building on the final example above, this is rendered into a table with gt()
 # The names for the columns are adjusted with cols_label(), a function that's part of the gt package
 # An additional step also formats the percent column to look more presentable, rather than a raw number
-responses |> 
-  rename(experience = how_much_experience_do_you_have_with_r) |> 
-  group_by(experience) |> 
-  count() |> 
-  ungroup() |> 
-  mutate(percent = n / n()) |> 
-  mutate(experience = fct(experience,
-                          levels = c("None at all",
-                                     "Slight experience",
-                                     "Moderate experience",
-                                     "A lot of experience"))) |> 
-  arrange(experience) |> 
-  mutate(percent = scales::label_percent(1)(percent)) |> 
-  gt() |> 
-  cols_label(experience = "Level of R Experience",
-             n = "#",
-             percent = "%")
+responses |>
+  rename(experience = how_much_experience_do_you_have_with_r) |>
+  group_by(experience) |>
+  count() |>
+  ungroup() |>
+  mutate(percent = n / n()) |>
+  mutate(
+    experience = fct(
+      experience,
+      levels = c(
+        "None at all",
+        "Slight experience",
+        "Moderate experience",
+        "A lot of experience"
+      )
+    )
+  ) |>
+  arrange(experience) |>
+  mutate(percent = scales::label_percent(1)(percent)) |>
+  gt() |>
+  cols_label(experience = "Level of R Experience", n = "#", percent = "%")
 
 ```
 
