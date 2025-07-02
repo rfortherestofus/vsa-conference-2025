@@ -32,6 +32,10 @@ library(gt)
 # This helps to deal with date & time data
 library(lubridate)
 
+# This is are packages for handling & visualizing geographical data
+library(sf)
+library(tidygeocoder)
+
 
 ```
 
@@ -51,7 +55,7 @@ responses <- read_sheet(
 responses <- clean_names(responses)
 ```
 
-## Row
+## Row {height=10%}
 
 ### Column {width=50%}
 
@@ -188,7 +192,6 @@ responses |>
 
 ```{r dates-chart}
 #| title: Birthday Months
-#| fig-height: 3
 # Let's show these more frequent birthday months in a visual
 # Continuing from the previous section, with some new steps to add in any months that might be missing (using a joining function)
 # The bits after ggplot() are what create this particular visualization & style it visually
@@ -256,3 +259,38 @@ responses |>
 responses |> 
   nrow()
 ```
+
+## Row {height=20%}
+
+```{r geo}
+#| title: Map of US Birthplaces
+# R is excellent for handling, transforming, and displaying complex geographic data
+# This uses the geocode() function from tidygeocoder to look up geographic info on cities & states using the Location IQ API
+# Then it saves and converts it to a useable format, sf, which can be displayed using ggplot alongside a map of the US
+geo_cities <- responses |> 
+  rename(city = in_what_city_were_you_born,
+         state = for_us_attendees_in_what_state_were_you_born) |> 
+  drop_na(state) |>
+  mutate(country = "US") |>
+  select(city, state, country) |> 
+  geocode(
+    city = city,
+    state = state,
+    country = country,
+    method = "iq"
+  ) |>
+  drop_na(long, lat) |>
+  st_as_sf(
+    coords = c("long", "lat"),
+    crs = 4326
+  )
+
+ggplot() +
+  geom_sf(data = st_as_sf(maps::map("state", fill= TRUE, plot = FALSE)), color = "grey90", fill = "grey90") +
+  geom_sf(data = geo_cities) +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        axis.text = element_blank())
+```
+
+## Row
