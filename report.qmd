@@ -213,3 +213,46 @@ responses |>
                       high = "#007765")
 ```
 
+## Row
+
+```{r filtering}
+#| output: false
+# R is great for filtering data in all kinds of ways
+# For example, let's filter out previous responses, so we can see how many new responses we've gotten
+# Google Sheets adds a timestamp to every new response, so we can use that to compare
+# R has a built-in function, today() that tells you what day it is
+# So if the timestamp is greater than today() (since it starts at midnight), then the response came in today
+responses |> 
+  filter(timestamp > today())
+
+# We'll use this to get the number of new, previous, and total responses, to show in highlighted boxes below
+```
+
+```{r new-resp}
+#| content: valuebox
+#| title: New responses
+#| icon: pencil
+#| color: "#6AA341"
+responses |> 
+  filter(timestamp > today()) |> 
+  nrow()
+```
+
+```{r old-resp}
+#| content: valuebox
+#| title: Old responses
+#| icon: clock
+#| color: "#E4E192"
+responses |> 
+  filter(timestamp < today()) |> 
+  nrow()
+```
+
+```{r total-resp}
+#| content: valuebox
+#| title: Total responses
+#| icon: clipboard
+#| color: "#007765"
+responses |> 
+  nrow()
+```
