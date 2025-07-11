@@ -36,6 +36,10 @@ library(lubridate)
 library(sf)
 library(tidygeocoder)
 
+# This provides easy categorization for free response gender data
+# > If you're doing this yourself, it has a slightly different installation than the other packages
+# devtools::install_github("ropensci/gendercoder")
+library(gendercoder)
 
 ```
 
@@ -378,4 +382,28 @@ responses |>
 
 ```
 
+## Row {height=10%}
+
+```{r gender}
+#| title: Gender (categorized from raw data)
+#| fig-height: 2
+# While the things we've shown above could be done in Excel, Google Sheets, or similar tools
+# Other R packages provide extremely powerful functionality that wouldn't be possible with other platforms
+# One example is gendercoder, which is designed to handle free-response gender data
+# You can read more about the package here: https://github.com/ropensci/gendercoder
+responses |> 
+  rename(gender = what_is_your_gender) |> 
+  mutate(gender_coded = recode_gender(gender)) |> 
+  group_by(gender_coded) |> 
+  count() |> 
+  ungroup() |> 
+  ggplot(aes(x = "", y = n, fill = gender_coded)) +
+  geom_bar(stat = "identity") +
+  coord_polar("y", start = 0) +
+  theme_void()
+
+# A pie chart is made from the data above by creating a stacked bar chart, and then changing to polar coordinates
+# Commenting out the coord_polar() line above would change it back
+
+```
 
