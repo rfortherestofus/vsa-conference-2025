@@ -145,29 +145,86 @@ penguins |>
 
 
 
-# Brian Example {.inverse}
+# Example: Automated Analysis & Reporting {.inverse}
 
 ---
 
-![](screenshot.png)
+Lincoln Park Zoo's Guest Experience Dashboard
 
-## Show dashboard?
+[![](assets/gex-db-screenshot.png)](http://production.lpzoo.org/production.lpzoo.org/data/gex-dashboard.html)
 
-## Image to show process of creating dashboard
+## How does this work?
 
-- From Alchemer
-- Windows task scheduler
+- Each day, responses are pulled from Alchemer (survey platform)
+- R is used to clean & organize data, analyze it, create visualizations
+- Rendered into report via Quarto
+- Uploaded to zoo server for online viewing
+
+---
+
+![](assets/brian-process-old.png)
+
+. . .
+
+![](assets/brian-process-new.png)
+
+## Time Investment
+
+- Creating this dashboard has been a 2-year project
+- Most of the work was done in about 7 months
+- Later specialized improvements took about 4 months
+- In between, lots of small tweaks, updates, and bug fixes
+
+### Lines of code going into the dashboard
+
+```{r}
+# lines of code that go into the gex dashboard
+library(tidyverse)
+tribble(~desc, ~lines,
+        "Creating the dashboard itself", 3483,
+        "Helper functions", 257,
+        "Organizing & analyzing core survey data", 1107,
+        "Specialized map visualizations", 222,
+        "Custom visual of favorite animals", 100,
+        "Specialized free response text analysis", 172,
+        "Secondary survey data import", 153) |> 
+  arrange(lines) |> 
+  mutate(desc = fct(desc)) |> 
+  ggplot(aes(y = desc, x = lines, label = lines)) +
+  geom_bar(stat = "identity") +
+  geom_text(hjust = -0.5) +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        text = element_text(size = 20)) +
+  expand_limits(x = c(0, 4000))
+```
+
+## This is too difficult!
+
+- Before, I had to repeat my work over and over
+- Now, everything I do builds on what I've done before
+- Allows me to gradually expand complexity, with a solid foundation (instead of rebuilding the foundation each time)
+
+## What does it look like to start small?
+
+- Remember that survey you took at the beginning...
 
 # Demo {.inverse}
 
-Brian
-
-## Pull in data
-
-## Create dashboard
-
 # Q+A {.inverse}
 
-Both
+# Resources {.inverse}
+
+- Core tools:
+  - https://posit.co/download/rstudio-desktop/
+  - https://www.tidyverse.org/packages/
+  - https://rstudio.github.io/cheatsheets/
 
 # Resources {.inverse}
+
+- Books:
+  - https://book.rfortherestofus.com/
+  - https://r4ds.hadley.nz/
+  - https://www.bigbookofr.com/
