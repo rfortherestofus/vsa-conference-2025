@@ -213,6 +213,15 @@ tribble(~desc, ~lines,
 
 # Demo {.inverse}
 
+## What did this show?
+
+- Directly importing raw data
+- Cleaning, organizing, and transforming data
+- Quickly grouping & summarizing datasets
+- Many flexible visualizations
+- Write code once, and re-run/modify as needed
+- Things that are very difficult with other tools, can be much easier with R
+
 # Q+A {.inverse}
 
 # Resources {.inverse}
