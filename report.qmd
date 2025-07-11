@@ -271,10 +271,10 @@ responses |>
   nrow()
 ```
 
-## Row {height=20%}
+## Row {height=10%}
 
-```{r geo}
-#| title: Map of US Birthplaces
+```{r geo-1}
+#| title: Map of Lower 48 US Birthplaces
 # R is excellent for handling, transforming, and displaying complex geographic data
 # This uses the geocode() function from tidygeocoder to look up geographic info on cities & states using the Location IQ API
 # Then it saves and converts it to a useable format, sf, which can be displayed using ggplot alongside a map of the US
@@ -300,6 +300,9 @@ geo_cities <- responses |>
     crs = 4326
   )
 
+# This creates the graph using two geom_sf objects
+# The first one is a map of the lower 48 United States
+# The second one is our "geo_cities" data that we created above
 ggplot() +
   geom_sf(data = st_as_sf(maps::map("state", fill= TRUE, plot = FALSE)), color = "grey90", fill = "grey90") +
   geom_sf(data = geo_cities) +
@@ -308,4 +311,71 @@ ggplot() +
         axis.text = element_blank())
 ```
 
-## Row
+```{r geo-2}
+#| output: false
+# What if we wanted to lump together our birthplace data into larger categories, to look for trends?
+# R has many options for recategorizing data based on what criteria are met
+# In this case, let's categorize birthplaces into regions
+
+# First we need a list of which states are in which regions
+# This is written in manually from https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States
+# More advanced R usage could pull that table directly from Wikipedia!
+region_northeast <- c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont", "New Jersey", "New York", "Pennsylvania")
+region_midwest <- c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin", "Iowa", "Kansas", "Minnesota", "Missouri", "Nebraska", "North Dakota", "South Dakota")
+region_south <- c("Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", "North Carolina", "South Carolina", "Virginia", "West Virginia", "Alabama", "Kentucky", "Mississippi", "Tennessee", "Arkansas", "Louisiana", "Oklahoma", "Texas")
+region_west <- c("Arizona", "Colorado", "Idaho", "Montana", "Nevada", "New Mexico", "Utah", "Wyoming", "Alaska", "California", "Hawaii", "Oregon", "Washington")
+
+# One way to recategorize is using case_when, which can create a column based on a series of tests
+# The test we're using here is %in%, which looks to see whether something is one of the items in a vector (the region_ objects defined above)
+# If that test is true, then it fills in that column with whatever is after the tilde (~)
+# If all tests pass false, then it puts in whatever is listed for .default at the end
+responses |> 
+  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
+  mutate(region = case_when(state %in% region_northeast ~ "Northeast",
+                            state %in% region_midwest ~ "Midwest",
+                            state %in% region_south ~ "South",
+                            state %in% region_west ~ "West",
+                            .default = NA)) |> 
+  select(state, region)
+
+# Another way to categorize is to use a join
+# This is similar to XLOOKUP in Excel-- using a given column in one data table, it finds matches from a corresponding column in another table
+# This is easiest to understand if we have all of the regions in a single table, so let's do that first
+# What's happening here is each of the vectors above are being turned into tables with their appropriate regions labeled, and then bind_rows is used to attach them all together into one large table
+regions_us <- bind_rows(region_northeast |> as_tibble() |> rename(state = value) |> mutate(region = "Northeast"),
+                       region_midwest |> as_tibble() |> rename(state = value) |> mutate(region = "Midwest"),
+                       region_south |> as_tibble() |> rename(state = value) |> mutate(region = "South"),
+                       region_west |> as_tibble() |> rename(state = value) |> mutate(region = "West")) |> 
+  arrange(state)
+
+# Now, instead of using case_when, we instead join responses & regions_us
+# Because both have columns named "state", R knows to automatically fill in the appropriate region for each row
+responses |> 
+  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
+  left_join(regions_us) |> 
+  select(state, region)
+
+```
+
+```{r geo-3}
+#| title: Lower 48 US Birth Regions
+# Let's show the birth regions via a bar chart
+# Changing the region into a factor like we did above, allows us to order the regions non-alphabetically
+responses |> 
+  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
+  left_join(regions_us) |> 
+  select(region) |> 
+  group_by(region) |> 
+  count() |> 
+  ungroup() |> 
+  drop_na() |> 
+  ggplot(aes(x = n, y = fct(region, levels = c("Northeast", "Midwest", "West", "South")), fill = region)) +
+  geom_bar(stat = "identity") +
+  theme_minimal(base_size = 20) +
+  theme(panel.grid = element_blank(),
+        legend.position = "none",
+        axis.title = element_blank())
+
+```
+
+
