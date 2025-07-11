@@ -168,6 +168,14 @@ Lincoln Park Zoo's Guest Experience Dashboard
 
 ![](assets/brian-process-new.png)
 
+### How does this run automatically?
+
+- Windows Task Scheduler
+- On Mac/Linux, chron jobs (via command line)
+
+![](assets/task-scheduler.png)
+
+
 ## Time Investment
 
 - Creating this dashboard has been a 2-year project
