@@ -44,9 +44,13 @@ library(tidygeocoder)
 # Here's the link to add new responses to the survey: https://forms.gle/1BRREmqWbVB6x8nm9
 
 # Authenticating with Google is necessary before downloading data from Sheets
+# > If you're doing this yourself later, you can instead uncomment the following line and add your own email address
+# gs4_auth("YOUR_EMAIL_HERE")
 gs4_auth(Sys.getenv("GOOGLE_SHEETS_EMAIL"))
 
 # This gets the responses from the Google Sheet, and saves it with the name "responses"
+# Doing this later on your own, you could replace the spreadsheet URL with one you created
+# But you would need to have the same questions as the survey linked above, for the following sections of code to work
 responses <- read_sheet(
   "https://docs.google.com/spreadsheets/d/1fL0_iM95kR2YU6om8ZE6yk_2ufp9W4RdR35gVxvi9Q8/"
 )
@@ -267,6 +271,10 @@ responses |>
 # R is excellent for handling, transforming, and displaying complex geographic data
 # This uses the geocode() function from tidygeocoder to look up geographic info on cities & states using the Location IQ API
 # Then it saves and converts it to a useable format, sf, which can be displayed using ggplot alongside a map of the US
+# To run this yourself, you'll need to sign up with Location IQ and save their API key to your .Renviron
+# > Uncomment and run the following line
+# usethis::edit_r_environ()
+# > Then add LOCATIONIQ_API_KEY = whatever_your_key_is, save, and restart R to proceed
 geo_cities <- responses |> 
   rename(city = in_what_city_were_you_born,
          state = for_us_attendees_in_what_state_were_you_born) |> 
