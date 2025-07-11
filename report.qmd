@@ -140,7 +140,10 @@ responses |>
 
 # Building on the final example above, this is rendered into a table with gt()
 # The names for the columns are adjusted with cols_label(), a function that's part of the gt package
-# An additional step also formats the percent column to look more presentable, rather than a raw number
+# Additional steps do some formatting
+# - Making the percent column to look more presentable, rather than a raw number
+# - Increasing the font size
+# - Setting the table width to 100%, so it fills the dashboard area it's in
 responses |>
   rename(experience = how_much_experience_do_you_have_with_r) |>
   group_by(experience) |>
@@ -161,7 +164,9 @@ responses |>
   arrange(experience) |>
   mutate(percent = scales::label_percent(1)(percent)) |>
   gt() |>
-  cols_label(experience = "Level of R Experience", n = "#", percent = "%")
+  cols_label(experience = "Level of R Experience", n = "#", percent = "%") |> 
+  tab_options(table.font.size = 24,
+              table.width = pct(100))
 
 ```
 
@@ -212,8 +217,10 @@ responses |>
   mutate(n = case_when(is.na(n) ~ 0, .default = n)) |> 
   ggplot() +
   geom_tile(aes(x = month, y = 1, fill = n)) +
-  theme_minimal() +
-  theme(legend.position = "top",
+  theme_minimal(base_size = 20) +
+  theme(legend.position = "bottom",
+        legend.key.width = unit(2, "cm"),
+        legend.title = element_blank(),
         axis.title = element_blank(),
         axis.text.y = element_blank()) +
   scale_fill_gradient(low = "white",
