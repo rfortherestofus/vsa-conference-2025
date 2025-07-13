@@ -273,7 +273,7 @@ responses |>
 ## Row {height=10%}
 
 ```{r geo-1}
-#| title: Map of Lower 48 US Birthplaces
+#| title: Map of US Birthplaces
 # R is excellent for handling, transforming, and displaying complex geographic data
 # This uses the geocode() function from tidygeocoder to look up geographic info on cities & states using the Location IQ API
 # Then it saves and converts it to a useable format, sf, which can be displayed using ggplot alongside a map of the US
@@ -306,10 +306,11 @@ us_states <-
   states(progress_bar = FALSE) |>
   clean_names() |>
   select(name) |>
+  filter(name %in% state.name) |>
   shift_geometry()
 
 # This creates the graph using two geom_sf objects
-# The first one is a map of the lower 48 United States
+# The first one is a map of the United States
 # The second one is our "geo_cities" data that we created above
 ggplot() +
   geom_sf(
@@ -388,7 +389,9 @@ region_west <- c(
   "California",
   "Hawaii",
   "Oregon",
-  "Washington"
+  "Washington",
+  "Alaska",
+  "Hawaii"
 )
 
 # One way to recategorize is using case_when, which can create a column based on a series of tests
@@ -438,7 +441,7 @@ responses |>
 ```
 
 ```{r geo-3}
-#| title: Lower 48 US Birth Regions
+#| title: US Birth Regions
 # Let's show the birth regions via a bar chart
 # Changing the region into a factor like we did above, allows us to order the regions non-alphabetically
 responses |>
@@ -454,7 +457,8 @@ responses |>
     y = fct(region, levels = c("Northeast", "Midwest", "West", "South")),
     fill = region
   )) +
-  geom_bar(stat = "identity") +
+  geom_col() +
+  scale_y_discrete(drop = FALSE) +
   theme_minimal(base_size = 20) +
   theme(
     panel.grid = element_blank(),
@@ -479,7 +483,7 @@ responses |>
   count() |>
   ungroup() |>
   ggplot(aes(x = "", y = n, fill = gender_coded)) +
-  geom_bar(stat = "identity") +
+  geom_col() +
   coord_polar("y", start = 0) +
   theme_void()
 
