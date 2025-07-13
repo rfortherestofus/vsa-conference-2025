@@ -216,15 +216,12 @@ responses |>
   right_join(as_tibble(month.abb) |> rename(month = value)) |>
   mutate(month = fct(month, levels = month.abb)) |>
   mutate(n = case_when(is.na(n) ~ 0, .default = n)) |>
-  ggplot() +
-  geom_tile(aes(x = month, y = 1, fill = n)) +
+  ggplot(aes(x = month, y = n)) +
+  geom_col(fill = "#007765") +
   theme_minimal(base_size = 20) +
   theme(
-    legend.position = "bottom",
-    legend.key.width = unit(2, "cm"),
-    legend.title = element_blank(),
     axis.title = element_blank(),
-    axis.text.y = element_blank()
+    panel.grid.minor = element_blank()
   ) +
   scale_fill_gradient(low = "white", high = "#007765")
 ```
