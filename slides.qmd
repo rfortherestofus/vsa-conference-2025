@@ -54,7 +54,7 @@ library(tidycensus)
 
 ---
 
-![](assets/penguins-data.png)
+![](assets/penguins-data.png){.shadow .rounded fig-align="center"}
 
 ---
 
@@ -118,7 +118,7 @@ penguins |>
 ---
 
 :::{.center-slide}
-[![](assets/psc.png)](https://rfortherestofus.com/success-stories/pschousing)
+[![](assets/psc.png)](https://rfortherestofus.com/success-stories/pschousing){.shadow .rounded fig-align="center"}
 :::
 
 
@@ -126,11 +126,11 @@ penguins |>
 
 ---
 
-![](assets/tidyverse-website.png)
+![](assets/tidyverse-website.png){.shadow .rounded fig-align="center"}
 
 ---
 
-![](assets/gendercoder.png)
+![](assets/gendercoder.png){.shadow .rounded fig-align="center"}
 
 ## R's Killer Feature: Quarto {.inverse}
 
@@ -188,24 +188,36 @@ Lincoln Park Zoo's Guest Experience Dashboard
 ```{r}
 # lines of code that go into the gex dashboard
 library(tidyverse)
-tribble(~desc, ~lines,
-        "Creating the dashboard itself", 3483,
-        "Helper functions", 257,
-        "Organizing & analyzing core survey data", 1107,
-        "Specialized map visualizations", 222,
-        "Custom visual of favorite animals", 100,
-        "Specialized free response text analysis", 172,
-        "Secondary survey data import", 153) |> 
-  arrange(lines) |> 
-  mutate(desc = fct(desc)) |> 
+tribble(
+  ~desc,
+  ~lines,
+  "Creating the dashboard itself",
+  3483,
+  "Helper functions",
+  257,
+  "Organizing & analyzing core survey data",
+  1107,
+  "Specialized map visualizations",
+  222,
+  "Custom visual of favorite animals",
+  100,
+  "Specialized free response text analysis",
+  172,
+  "Secondary survey data import",
+  153
+) |>
+  arrange(lines) |>
+  mutate(desc = fct(desc)) |>
   ggplot(aes(y = desc, x = lines, label = lines)) +
   geom_bar(stat = "identity") +
   geom_text(hjust = -0.5) +
   theme_minimal() +
-  theme(panel.grid = element_blank(),
-        axis.title = element_blank(),
-        axis.text.x = element_blank(),
-        text = element_text(size = 20)) +
+  theme(
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    axis.text.x = element_blank(),
+    text = element_text(size = 20)
+  ) +
   expand_limits(x = c(0, 4000))
 ```
 
@@ -234,14 +246,14 @@ tribble(~desc, ~lines,
 
 # Resources {.inverse}
 
-- Core tools:
-  - https://posit.co/download/rstudio-desktop/
-  - https://www.tidyverse.org/packages/
-  - https://rstudio.github.io/cheatsheets/
+## Core Tools
 
-# Resources {.inverse}
+- https://posit.co/download/rstudio-desktop/
+- https://www.tidyverse.org/packages/
+- https://rstudio.github.io/cheatsheets/
 
-- Books:
-  - https://book.rfortherestofus.com/
-  - https://r4ds.hadley.nz/
-  - https://www.bigbookofr.com/
+## Books
+
+- https://book.rfortherestofus.com/
+- https://r4ds.hadley.nz/
+- https://www.bigbookofr.com/
