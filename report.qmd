@@ -34,13 +34,13 @@ library(lubridate)
 
 # This is are packages for handling & visualizing geographical data
 library(sf)
+library(tigris)
 library(tidygeocoder)
 
 # This provides easy categorization for free response gender data
 # > If you're doing this yourself, it has a slightly different installation than the other packages
 # devtools::install_github("ropensci/gendercoder")
 library(gendercoder)
-
 ```
 
 ```{r import}
@@ -136,7 +136,6 @@ responses |>
     )
   ) |>
   arrange(experience)
-
 ```
 
 ```{r experience-table}
@@ -168,10 +167,8 @@ responses |>
   arrange(experience) |>
   mutate(percent = scales::label_percent(1)(percent)) |>
   gt() |>
-  cols_label(experience = "Level of R Experience", n = "#", percent = "%") |> 
-  tab_options(table.font.size = 24,
-              table.width = pct(100))
-
+  cols_label(experience = "Level of R Experience", n = "#", percent = "%") |>
+  tab_options(table.font.size = 24, table.width = pct(100))
 ```
 
 
@@ -182,24 +179,24 @@ responses |>
 # It's common to have to clean up date & time data when it's messy or nonstandard
 # For example, Excel or Google Sheets can have a hard time taking a date in text format, and turning it into a usable "date" format
 # R is very good at cleaning up messy date data-- here's the birthday data from the survey that is intentionally messed up a bit
-responses |> 
+responses |>
   select(bad_birthday)
 
 # The parse_date_time() function in the lubridate package can quickly transform text dates into a useable format
-# Like above we add a new column by mutating an existing column, using bad_birthday to create good_birthday with parse_date_time() 
-responses |> 
-  select(bad_birthday) |> 
+# Like above we add a new column by mutating an existing column, using bad_birthday to create good_birthday with parse_date_time()
+responses |>
+  select(bad_birthday) |>
   mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy"))
 
 # This allows us to do things like easily get the month from the date using month()
 # Which can be used to highlight which months of the year have the most birthdays from our session attendees
 # (This uses same grouping/counting steps as above)
-responses |> 
-  select(bad_birthday) |> 
-  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |> 
-  mutate(month = month(good_birthday, label = TRUE)) |> 
-  group_by(month) |> 
-  count() |> 
+responses |>
+  select(bad_birthday) |>
+  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |>
+  mutate(month = month(good_birthday, label = TRUE)) |>
+  group_by(month) |>
+  count() |>
   arrange(desc(n))
 ```
 
@@ -209,26 +206,27 @@ responses |>
 # Continuing from the previous section, with some new steps to add in any months that might be missing (using a joining function)
 # The bits after ggplot() are what create this particular visualization & style it visually
 # (ggplot is very powerful but also very complex, and we aren't covering it in detail here-- but you can learn more from our linked resources!)
-responses |> 
-  select(bad_birthday) |> 
-  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |> 
-  mutate(month = month(good_birthday, label = TRUE)) |> 
-  group_by(month) |> 
-  count() |> 
-  ungroup() |> 
-  right_join(as_tibble(month.abb) |> rename(month = value)) |> 
-  mutate(month = fct(month, levels = month.abb)) |> 
-  mutate(n = case_when(is.na(n) ~ 0, .default = n)) |> 
+responses |>
+  select(bad_birthday) |>
+  mutate(good_birthday = parse_date_time(bad_birthday, orders = "mdy")) |>
+  mutate(month = month(good_birthday, label = TRUE)) |>
+  group_by(month) |>
+  count() |>
+  ungroup() |>
+  right_join(as_tibble(month.abb) |> rename(month = value)) |>
+  mutate(month = fct(month, levels = month.abb)) |>
+  mutate(n = case_when(is.na(n) ~ 0, .default = n)) |>
   ggplot() +
   geom_tile(aes(x = month, y = 1, fill = n)) +
   theme_minimal(base_size = 20) +
-  theme(legend.position = "bottom",
-        legend.key.width = unit(2, "cm"),
-        legend.title = element_blank(),
-        axis.title = element_blank(),
-        axis.text.y = element_blank()) +
-  scale_fill_gradient(low = "white",
-                      high = "#007765")
+  theme(
+    legend.position = "bottom",
+    legend.key.width = unit(2, "cm"),
+    legend.title = element_blank(),
+    axis.title = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  scale_fill_gradient(low = "white", high = "#007765")
 ```
 
 ## Row
@@ -240,7 +238,7 @@ responses |>
 # Google Sheets adds a timestamp to every new response, so we can use that to compare
 # R has a built-in function, today() that tells you what day it is
 # So if the timestamp is greater than today() (since it starts at midnight), then the response came in today
-responses |> 
+responses |>
   filter(timestamp > today())
 
 # We'll use this to get the number of new, previous, and total responses, to show in highlighted boxes below
@@ -251,8 +249,8 @@ responses |>
 #| title: New responses
 #| icon: pencil
 #| color: "#6AA341"
-responses |> 
-  filter(timestamp > today()) |> 
+responses |>
+  filter(timestamp > today()) |>
   nrow()
 ```
 
@@ -261,8 +259,8 @@ responses |>
 #| title: Old responses
 #| icon: clock
 #| color: "#E4E192"
-responses |> 
-  filter(timestamp < today()) |> 
+responses |>
+  filter(timestamp < today()) |>
   nrow()
 ```
 
@@ -271,7 +269,7 @@ responses |>
 #| title: Total responses
 #| icon: clipboard
 #| color: "#007765"
-responses |> 
+responses |>
   nrow()
 ```
 
@@ -286,12 +284,14 @@ responses |>
 # > Uncomment and run the following line
 # usethis::edit_r_environ()
 # > Then add LOCATIONIQ_API_KEY = whatever_your_key_is, save, and restart R to proceed
-geo_cities <- responses |> 
-  rename(city = in_what_city_were_you_born,
-         state = for_us_attendees_in_what_state_were_you_born) |> 
+geo_cities <- responses |>
+  rename(
+    city = in_what_city_were_you_born,
+    state = for_us_attendees_in_what_state_were_you_born
+  ) |>
   drop_na(state) |>
   mutate(country = "US") |>
-  select(city, state, country) |> 
+  select(city, state, country) |>
   geocode(
     city = city,
     state = state,
@@ -304,15 +304,25 @@ geo_cities <- responses |>
     crs = 4326
   )
 
+# This imports the geospatial data needed to make a map of the United States
+us_states <-
+  states(progress_bar = FALSE) |>
+  clean_names() |>
+  select(name) |>
+  shift_geometry()
+
 # This creates the graph using two geom_sf objects
 # The first one is a map of the lower 48 United States
 # The second one is our "geo_cities" data that we created above
 ggplot() +
-  geom_sf(data = st_as_sf(maps::map("state", fill= TRUE, plot = FALSE)), color = "grey90", fill = "grey90") +
+  geom_sf(
+    data = us_states,
+    color = "grey90",
+    fill = "grey90"
+  ) +
   geom_sf(data = geo_cities) +
   theme_minimal() +
-  theme(panel.grid = element_blank(),
-        axis.text = element_blank())
+  theme(panel.grid = element_blank(), axis.text = element_blank())
 ```
 
 ```{r geo-2}
@@ -324,62 +334,136 @@ ggplot() +
 # First we need a list of which states are in which regions
 # This is written in manually from https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States
 # More advanced R usage could pull that table directly from Wikipedia!
-region_northeast <- c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont", "New Jersey", "New York", "Pennsylvania")
-region_midwest <- c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin", "Iowa", "Kansas", "Minnesota", "Missouri", "Nebraska", "North Dakota", "South Dakota")
-region_south <- c("Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", "North Carolina", "South Carolina", "Virginia", "West Virginia", "Alabama", "Kentucky", "Mississippi", "Tennessee", "Arkansas", "Louisiana", "Oklahoma", "Texas")
-region_west <- c("Arizona", "Colorado", "Idaho", "Montana", "Nevada", "New Mexico", "Utah", "Wyoming", "Alaska", "California", "Hawaii", "Oregon", "Washington")
+region_northeast <- c(
+  "Connecticut",
+  "Maine",
+  "Massachusetts",
+  "New Hampshire",
+  "Rhode Island",
+  "Vermont",
+  "New Jersey",
+  "New York",
+  "Pennsylvania"
+)
+region_midwest <- c(
+  "Illinois",
+  "Indiana",
+  "Michigan",
+  "Ohio",
+  "Wisconsin",
+  "Iowa",
+  "Kansas",
+  "Minnesota",
+  "Missouri",
+  "Nebraska",
+  "North Dakota",
+  "South Dakota"
+)
+region_south <- c(
+  "Delaware",
+  "District of Columbia",
+  "Florida",
+  "Georgia",
+  "Maryland",
+  "North Carolina",
+  "South Carolina",
+  "Virginia",
+  "West Virginia",
+  "Alabama",
+  "Kentucky",
+  "Mississippi",
+  "Tennessee",
+  "Arkansas",
+  "Louisiana",
+  "Oklahoma",
+  "Texas"
+)
+region_west <- c(
+  "Arizona",
+  "Colorado",
+  "Idaho",
+  "Montana",
+  "Nevada",
+  "New Mexico",
+  "Utah",
+  "Wyoming",
+  "Alaska",
+  "California",
+  "Hawaii",
+  "Oregon",
+  "Washington"
+)
 
 # One way to recategorize is using case_when, which can create a column based on a series of tests
 # The test we're using here is %in%, which looks to see whether something is one of the items in a vector (the region_ objects defined above)
 # If that test is true, then it fills in that column with whatever is after the tilde (~)
 # If all tests pass false, then it puts in whatever is listed for .default at the end
-responses |> 
-  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
-  mutate(region = case_when(state %in% region_northeast ~ "Northeast",
-                            state %in% region_midwest ~ "Midwest",
-                            state %in% region_south ~ "South",
-                            state %in% region_west ~ "West",
-                            .default = NA)) |> 
+responses |>
+  rename(state = for_us_attendees_in_what_state_were_you_born) |>
+  mutate(
+    region = case_when(
+      state %in% region_northeast ~ "Northeast",
+      state %in% region_midwest ~ "Midwest",
+      state %in% region_south ~ "South",
+      state %in% region_west ~ "West",
+      .default = NA
+    )
+  ) |>
   select(state, region)
 
 # Another way to categorize is to use a join
 # This is similar to XLOOKUP in Excel-- using a given column in one data table, it finds matches from a corresponding column in another table
 # This is easiest to understand if we have all of the regions in a single table, so let's do that first
 # What's happening here is each of the vectors above are being turned into tables with their appropriate regions labeled, and then bind_rows is used to attach them all together into one large table
-regions_us <- bind_rows(region_northeast |> as_tibble() |> rename(state = value) |> mutate(region = "Northeast"),
-                       region_midwest |> as_tibble() |> rename(state = value) |> mutate(region = "Midwest"),
-                       region_south |> as_tibble() |> rename(state = value) |> mutate(region = "South"),
-                       region_west |> as_tibble() |> rename(state = value) |> mutate(region = "West")) |> 
+regions_us <- bind_rows(
+  region_northeast |>
+    as_tibble() |>
+    rename(state = value) |>
+    mutate(region = "Northeast"),
+  region_midwest |>
+    as_tibble() |>
+    rename(state = value) |>
+    mutate(region = "Midwest"),
+  region_south |>
+    as_tibble() |>
+    rename(state = value) |>
+    mutate(region = "South"),
+  region_west |> as_tibble() |> rename(state = value) |> mutate(region = "West")
+) |>
   arrange(state)
 
 # Now, instead of using case_when, we instead join responses & regions_us
 # Because both have columns named "state", R knows to automatically fill in the appropriate region for each row
-responses |> 
-  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
-  left_join(regions_us) |> 
+responses |>
+  rename(state = for_us_attendees_in_what_state_were_you_born) |>
+  left_join(regions_us) |>
   select(state, region)
-
 ```
 
 ```{r geo-3}
 #| title: Lower 48 US Birth Regions
 # Let's show the birth regions via a bar chart
 # Changing the region into a factor like we did above, allows us to order the regions non-alphabetically
-responses |> 
-  rename(state = for_us_attendees_in_what_state_were_you_born) |> 
-  left_join(regions_us) |> 
-  select(region) |> 
-  group_by(region) |> 
-  count() |> 
-  ungroup() |> 
-  drop_na() |> 
-  ggplot(aes(x = n, y = fct(region, levels = c("Northeast", "Midwest", "West", "South")), fill = region)) +
+responses |>
+  rename(state = for_us_attendees_in_what_state_were_you_born) |>
+  left_join(regions_us) |>
+  select(region) |>
+  group_by(region) |>
+  count() |>
+  ungroup() |>
+  drop_na() |>
+  ggplot(aes(
+    x = n,
+    y = fct(region, levels = c("Northeast", "Midwest", "West", "South")),
+    fill = region
+  )) +
   geom_bar(stat = "identity") +
   theme_minimal(base_size = 20) +
-  theme(panel.grid = element_blank(),
-        legend.position = "none",
-        axis.title = element_blank())
-
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "none",
+    axis.title = element_blank()
+  )
 ```
 
 ## Row {height=10%}
@@ -391,12 +475,12 @@ responses |>
 # Other R packages provide extremely powerful functionality that wouldn't be possible with other platforms
 # One example is gendercoder, which is designed to handle free-response gender data
 # You can read more about the package here: https://github.com/ropensci/gendercoder
-responses |> 
-  rename(gender = what_is_your_gender) |> 
-  mutate(gender_coded = recode_gender(gender)) |> 
-  group_by(gender_coded) |> 
-  count() |> 
-  ungroup() |> 
+responses |>
+  rename(gender = what_is_your_gender) |>
+  mutate(gender_coded = recode_gender(gender)) |>
+  group_by(gender_coded) |>
+  count() |>
+  ungroup() |>
   ggplot(aes(x = "", y = n, fill = gender_coded)) +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0) +
@@ -404,6 +488,4 @@ responses |>
 
 # A pie chart is made from the data above by creating a stacked bar chart, and then changing to polar coordinates
 # Commenting out the coord_polar() line above would change it back
-
 ```
-
