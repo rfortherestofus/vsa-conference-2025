@@ -1,3 +1,4 @@
-# vsa-conference-2025
+# Automating Data Analysis & Reporting with R
 
-https://docs.google.com/document/d/1GR8CcBO4aKYT-lkvzylfbUKuPFzdNZuXq_7BKZLTZn8/edit?tab=t.0
+This repo contains materials for the Visitor Studies Assocation 2025 Conference
+session titled Automating Data Analysis & Reporting with R.
