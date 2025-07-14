@@ -246,6 +246,11 @@ tribble(
 
 # Resources {.inverse}
 
+## Code Samples
+
+- Slides
+- Report (HTML and qmd file)
+
 ## Core Tools
 
 - https://posit.co/download/rstudio-desktop/
