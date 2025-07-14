@@ -48,6 +48,3 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# example report files
-report.html
-report_files/
