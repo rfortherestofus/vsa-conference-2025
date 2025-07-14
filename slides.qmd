@@ -248,8 +248,9 @@ tribble(
 
 ## Code Samples
 
-- Slides
-- Report (HTML and qmd file)
+- [Slides](https://vsaconference2025.netlify.app/slides.html)
+- [Dashboard](https://vsaconference2025.netlify.app/report.html)
+- [Dashboard Code](https://github.com/rfortherestofus/vsa-conference-2025/blob/main/report.qmd)
 
 ## Core Tools
 
